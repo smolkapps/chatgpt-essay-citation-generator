@@ -37,3 +37,6 @@ logs/
 
 # TS build info
 *.tsbuildinfo
+
+# npm auth/config — never commit
+.npmrc
