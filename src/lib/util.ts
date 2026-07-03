@@ -244,3 +244,50 @@ export function effectiveYear(s: Source): string | undefined {
   const d = parseISODate(s.publishedDate);
   return d?.year;
 }
+
+// ---------------------------------------------------------------------------
+// Helpers shared by the Chicago author-date and IEEE formatters.
+// These extend the existing date/name utilities above rather than duplicating
+// author parsing (`initials`) or date parsing (`parseISODate`).
+// ---------------------------------------------------------------------------
+
+/** IEEE-style abbreviated months: "Jan.", "Feb.", … "May", "Jun.", … "Dec.". */
+const MONTHS_IEEE = [
+  "Jan.", "Feb.", "Mar.", "Apr.", "May", "Jun.",
+  "Jul.", "Aug.", "Sep.", "Oct.", "Nov.", "Dec.",
+];
+
+/**
+ * IEEE date tail, e.g. "Mar. 2021" (month + year) or just "2021".
+ * IEEE references give month and year, never the day, so a day component in the
+ * ISO string is intentionally dropped.
+ */
+export function formatDateIEEE(iso: string | undefined): string {
+  const d = parseISODate(iso);
+  if (!d) return "";
+  if (d.month) return `${MONTHS_IEEE[d.month - 1]} ${d.year}`;
+  return d.year;
+}
+
+/**
+ * Render a page range with an en-dash (U+2013), as IEEE requires: an input of
+ * "45-60" or "45 – 60" becomes "45–60". A single page ("B7") is returned
+ * unchanged. Only the first hyphen/dash is treated as the range separator, so
+ * an unusual multi-part input like "45-50-60" becomes "45–50-60" (the tail is
+ * left as-is) rather than being collapsed.
+ */
+export function pageRangeEnDash(pages: string): string {
+  const p = clean(pages);
+  const m = p.match(/^(.+?)\s*[-–—]\s*(.+)$/);
+  if (!m) return p;
+  return `${m[1].trim()}–${m[2].trim()}`;
+}
+
+/**
+ * True when a page value denotes a range (contains a hyphen/en-dash/em-dash
+ * between two parts), e.g. "45-60" — used to pick "pp." over "p." in IEEE.
+ * A single page such as "B7" or "42" is not a range.
+ */
+export function isPageRange(pages: string): boolean {
+  return /^.+\s*[-–—]\s*.+$/.test(clean(pages));
+}

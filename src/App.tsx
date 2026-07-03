@@ -59,8 +59,8 @@ export default function App() {
       <header className="app__header">
         <h1>Citation &amp; Bibliography Generator</h1>
         <p className="tagline">
-          Format <strong>your own</strong> sources in MLA, APA, and Chicago — with in-text
-          citations. Everything runs in your browser; nothing is uploaded.
+          Format <strong>your own</strong> sources in MLA, APA, Chicago, and IEEE — with
+          in-text citations. Everything runs in your browser; nothing is uploaded.
         </p>
       </header>
 

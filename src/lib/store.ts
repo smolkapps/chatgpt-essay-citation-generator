@@ -58,7 +58,13 @@ export function newId(): string {
   return `s_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 10)}`;
 }
 
-const VALID_STYLES: ReadonlySet<string> = new Set<CitationStyle>(["mla", "apa", "chicago"]);
+const VALID_STYLES: ReadonlySet<string> = new Set<CitationStyle>([
+  "mla",
+  "apa",
+  "chicago",
+  "chicago-ad",
+  "ieee",
+]);
 const VALID_TYPES: ReadonlySet<string> = new Set(["book", "journal", "website", "newspaper"]);
 
 /**

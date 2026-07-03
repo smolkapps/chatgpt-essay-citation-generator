@@ -19,11 +19,19 @@ const src = (over: Partial<Source>): Source => ({
 });
 
 describe("STYLES metadata", () => {
-  it("exposes all three styles with the right list headings", () => {
-    expect(STYLES.map((s) => s.id)).toEqual(["mla", "apa", "chicago"]);
+  it("exposes all five styles with the right list headings", () => {
+    expect(STYLES.map((s) => s.id)).toEqual([
+      "mla",
+      "apa",
+      "chicago",
+      "chicago-ad",
+      "ieee",
+    ]);
     expect(STYLES.find((s) => s.id === "mla")?.listHeading).toBe("Works Cited");
     expect(STYLES.find((s) => s.id === "apa")?.listHeading).toBe("References");
     expect(STYLES.find((s) => s.id === "chicago")?.listHeading).toBe("Bibliography");
+    expect(STYLES.find((s) => s.id === "chicago-ad")?.listHeading).toBe("References");
+    expect(STYLES.find((s) => s.id === "ieee")?.listHeading).toBe("References");
   });
 });
 

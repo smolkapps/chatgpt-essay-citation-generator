@@ -5,7 +5,7 @@
 // chosen style. Everything here is plain data — no formatting decisions live
 // in this file.
 
-export type CitationStyle = "mla" | "apa" | "chicago";
+export type CitationStyle = "mla" | "apa" | "chicago" | "chicago-ad" | "ieee";
 
 export type SourceType = "book" | "journal" | "website" | "newspaper";
 
