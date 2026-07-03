@@ -8,6 +8,8 @@
 
 import { formatAPA, apaSignal } from "./apa";
 import { formatChicago, chicagoSignal } from "./chicago";
+import { formatChicagoAd, chicagoAdInText } from "./chicago-ad";
+import { formatIEEE, ieeeReference } from "./ieee";
 import { formatMLA, mlaSignal } from "./mla";
 import type { CitationStyle, FormattedCitation, Source } from "./types";
 import { clean, has, isCitable } from "./util";
@@ -29,6 +31,13 @@ export const STYLES: ReadonlyArray<{
     listHeading: "Bibliography",
     edition: "17th ed. (notes-bibliography)",
   },
+  {
+    id: "chicago-ad",
+    label: "Chicago A-D",
+    listHeading: "References",
+    edition: "17th ed. (author-date)",
+  },
+  { id: "ieee", label: "IEEE", listHeading: "References", edition: "reference list" },
 ];
 
 /** Format a single source in a single style. */
@@ -40,6 +49,10 @@ export function formatOne(source: Source, style: CitationStyle): FormattedCitati
       return formatAPA(source);
     case "chicago":
       return formatChicago(source);
+    case "chicago-ad":
+      return formatChicagoAd(source);
+    case "ieee":
+      return formatIEEE(source);
   }
 }
 
@@ -49,6 +62,8 @@ export function formatAll(source: Source): Record<CitationStyle, FormattedCitati
     mla: formatMLA(source),
     apa: formatAPA(source),
     chicago: formatChicago(source),
+    "chicago-ad": formatChicagoAd(source),
+    ieee: formatIEEE(source),
   };
 }
 
@@ -109,7 +124,13 @@ export function buildBibliography(
     const c = a.key.localeCompare(b.key, "en", { sensitivity: "base" });
     return c !== 0 ? c : a.index - b.index;
   });
-  return decorated.map(({ source, text }) => ({ source, text }));
+  // IEEE numbers references by their position in the rendered list, so the
+  // bracketed label is assigned after sorting rather than by formatOne (which
+  // has no position and defaults to [1] for single-source previews).
+  return decorated.map(({ source, text }, i) => ({
+    source,
+    text: style === "ieee" ? ieeeReference(source, i + 1) : text,
+  }));
 }
 
 /** Plain-text export of a whole bibliography, one entry per line. */
@@ -134,5 +155,9 @@ export function signalFor(s: Source, style: CitationStyle): string {
       return apaSignal(s);
     case "chicago":
       return chicagoSignal(s);
+    case "chicago-ad":
+      return chicagoAdInText(s);
+    case "ieee":
+      return `[n]`;
   }
 }

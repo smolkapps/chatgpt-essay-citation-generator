@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "description": "Student citation & bibliography generator — formats sources in MLA 9, APA 7, and Chicago 17 (notes-bibliography), with in-text citations. Local-only, no AI essay generation.",
+  "description": "Student citation & bibliography generator — formats sources in MLA 9, APA 7, Chicago 17 (notes-bibliography and author-date), and IEEE, with in-text citations. Local-only, no AI essay generation.",
   "license": "MIT",
   "scripts": {
     "dev": "vite",
