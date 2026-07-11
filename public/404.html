@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex" />
+    <title>Page not found — Citation &amp; Bibliography Generator</title>
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <style>
+      :root {
+        --bg: #f6f8fa;
+        --panel: #ffffff;
+        --ink: #1c2128;
+        --muted: #57606a;
+        --border: #d0d7de;
+        --accent: #1f6feb;
+        color-scheme: light;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #0d1117;
+          --panel: #161b22;
+          --ink: #e6edf3;
+          --muted: #9aa4b2;
+          --border: #30363d;
+          --accent: #2f81f7;
+          color-scheme: dark;
+        }
+      }
+      body {
+        margin: 0;
+        display: grid;
+        place-items: center;
+        min-height: 100vh;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        line-height: 1.5;
+      }
+      main {
+        max-width: 34rem;
+        margin: 1rem;
+        padding: 2rem;
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        text-align: center;
+      }
+      .code {
+        font-size: 3rem;
+        font-weight: 700;
+        margin: 0;
+        color: var(--accent);
+      }
+      h1 {
+        font-size: 1.3rem;
+        margin: 0.25rem 0 0.75rem;
+      }
+      p {
+        color: var(--muted);
+        margin: 0 0 1.25rem;
+      }
+      .example {
+        display: inline-block;
+        text-align: left;
+        font-size: 0.85rem;
+        color: var(--muted);
+        border-left: 3px solid var(--border);
+        padding-left: 0.75rem;
+        margin-bottom: 1.5rem;
+        font-style: italic;
+      }
+      a.button {
+        display: inline-block;
+        padding: 0.55rem 1.1rem;
+        background: var(--accent);
+        color: #fff;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 600;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p class="code">404</p>
+      <h1>Page not found</h1>
+      <p>
+        This page doesn't exist — a proper citation would have helped us find it. The
+        generator itself is one page, and it's right this way:
+      </p>
+      <span class="example">Page, Missing. “404: Not Found.” <em>This Website</em>, n.d.</span>
+      <br />
+      <a class="button" href="https://smolkapps.github.io/chatgpt-essay-citation-generator/"
+        >Go to the generator</a
+      >
+    </main>
+  </body>
+</html>

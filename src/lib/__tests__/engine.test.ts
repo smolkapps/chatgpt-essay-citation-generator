@@ -5,6 +5,7 @@ import {
   buildBibliography,
   formatAll,
   formatOne,
+  formatOneAt,
   signalFor,
   sortKey,
 } from "../engine";
@@ -115,5 +116,20 @@ describe("signalFor", () => {
     expect(signalFor(s, "mla")).toBe("Smith");
     expect(signalFor(s, "apa")).toBe("Smith");
     expect(signalFor(s, "chicago")).toBe("Smith");
+  });
+});
+
+describe("formatOneAt", () => {
+  it("numbers IEEE citations by the given position", () => {
+    const s = src({ title: "Some Paper", authors: [{ family: "Doe", given: "Jane" }] });
+    expect(formatOneAt(s, "ieee", 3).inText).toBe("[3]");
+    expect(formatOneAt(s, "ieee", 3).bibliography.startsWith("[3]")).toBe(true);
+  });
+
+  it("matches formatOne for non-numbered styles", () => {
+    const s = src({ title: "Some Book", authors: [{ family: "Doe", given: "Jane" }] });
+    for (const style of ["mla", "apa", "chicago", "chicago-ad"] as const) {
+      expect(formatOneAt(s, style, 5)).toEqual(formatOne(s, style));
+    }
   });
 });
