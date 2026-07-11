@@ -1,17 +1,48 @@
 :root {
   --bg: #f6f8fa;
   --panel: #ffffff;
+  --panel-2: #fcfcfd;
   --ink: #1c2128;
   --muted: #57606a;
   --border: #d0d7de;
   --accent: #1f6feb;
   --accent-ink: #0a3d91;
+  --on-accent: #ffffff;
   --danger: #cf222e;
+  --danger-border: #f0b4b8;
+  --danger-bg: #ffe9eb;
   --warn-bg: #fff8c5;
   --warn-border: #d4a72c;
+  --code-bg: #eef1f4;
+  --hover: #f3f4f6;
+  --input-bg: #ffffff;
   --radius: 10px;
   --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
   --sans: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0d1117;
+    --panel: #161b22;
+    --panel-2: #1c2129;
+    --ink: #e6edf3;
+    --muted: #9aa4b2;
+    --border: #30363d;
+    --accent: #2f81f7;
+    --accent-ink: #1f6feb;
+    --on-accent: #ffffff;
+    --danger: #ff7b82;
+    --danger-border: #6e2a30;
+    --danger-bg: #2d1517;
+    --warn-bg: #2a2410;
+    --warn-border: #7a6420;
+    --code-bg: #21262e;
+    --hover: #21262e;
+    --input-bg: #0d1117;
+    color-scheme: dark;
+  }
 }
 
 * {
@@ -30,6 +61,14 @@ body {
   max-width: 1160px;
   margin: 0 auto;
   padding: 1.5rem 1.25rem 3rem;
+}
+
+.app__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
 }
 
 .app__header h1 {
@@ -66,6 +105,7 @@ body {
 
 .segmented {
   display: inline-flex;
+  flex-wrap: wrap;
   border: 1px solid var(--border);
   border-radius: var(--radius);
   overflow: hidden;
@@ -99,12 +139,14 @@ body {
 
 .segmented__btn.is-active {
   background: var(--accent);
-  color: #fff;
+  color: var(--on-accent);
 }
 
 .columns {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  /* minmax(0, …) so a long unbreakable string (a URL in a citation) wraps
+     instead of widening the track past the viewport. */
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 1.25rem;
   align-items: start;
 }
@@ -126,6 +168,8 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 0.5rem;
+  flex-wrap: wrap;
   margin-bottom: 0.75rem;
 }
 
@@ -134,9 +178,19 @@ body {
   font-size: 1.15rem;
 }
 
+.col__actions {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
 .empty {
   color: var(--muted);
   font-style: italic;
+}
+
+.empty-state .empty {
+  margin-top: 0;
 }
 
 .source-list {
@@ -153,6 +207,12 @@ body {
   border-radius: var(--radius);
   padding: 0.85rem;
   margin: 0;
+  min-width: 0;
+}
+
+/* Fieldsets refuse to shrink below their content's min width by default. */
+fieldset {
+  min-inline-size: 0;
 }
 
 .source-editor__head {
@@ -186,8 +246,11 @@ select {
   padding: 0.4rem 0.5rem;
   border: 1px solid var(--border);
   border-radius: 6px;
-  background: #fff;
+  background: var(--input-bg);
   color: var(--ink);
+  /* Let inputs shrink with their grid/flex cell instead of overflowing it. */
+  width: 100%;
+  min-width: 0;
 }
 
 input:focus,
@@ -244,19 +307,25 @@ select:focus {
   padding: 0.4rem 0.8rem;
   border: 1px solid var(--border);
   border-radius: 6px;
-  background: #fff;
+  background: var(--panel);
   color: var(--ink);
   cursor: pointer;
 }
 
 .btn:hover {
-  background: #f3f4f6;
+  background: var(--hover);
+}
+
+.btn:focus-visible,
+.segmented__btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
 }
 
 .btn--primary {
   background: var(--accent);
   border-color: var(--accent);
-  color: #fff;
+  color: var(--on-accent);
 }
 
 .btn--primary:hover {
@@ -265,11 +334,11 @@ select:focus {
 
 .btn--danger {
   color: var(--danger);
-  border-color: #f0b4b8;
+  border-color: var(--danger-border);
 }
 
 .btn--danger:hover {
-  background: #ffe9eb;
+  background: var(--danger-bg);
 }
 
 .btn--small {
@@ -290,7 +359,7 @@ select:focus {
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 0.7rem 0.8rem;
-  background: #fcfcfd;
+  background: var(--panel-2);
 }
 
 .bib-item__entry {
@@ -298,6 +367,7 @@ select:focus {
   /* Bibliographies use a hanging indent. */
   padding-left: 1.6rem;
   text-indent: -1.6rem;
+  overflow-wrap: anywhere;
 }
 
 .bib-item__intext {
@@ -318,14 +388,16 @@ select:focus {
 code {
   font-family: var(--mono);
   font-size: 0.85em;
-  background: #eef1f4;
+  background: var(--code-bg);
   padding: 0.05rem 0.35rem;
   border-radius: 4px;
+  overflow-wrap: anywhere;
 }
 
 .bib-item__actions {
   display: flex;
   gap: 0.4rem;
+  flex-wrap: wrap;
 }
 
 .app__footer {
@@ -333,4 +405,77 @@ code {
   color: var(--muted);
   font-size: 0.82rem;
   max-width: 75ch;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Small screens: single-column forms, stacked author rows. */
+@media (max-width: 520px) {
+  .app {
+    padding: 1rem 0.85rem 2.5rem;
+  }
+
+  .app__header h1 {
+    font-size: 1.35rem;
+  }
+
+  .field-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .author-row {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .author-row .input--suffix {
+    grid-column: 1;
+  }
+
+  .col {
+    padding: 0.85rem;
+  }
+}
+
+/* Print: only the formatted reference list, with its hanging indent. */
+@media print {
+  body {
+    background: #fff;
+    color: #000;
+  }
+
+  .app__header button,
+  .notice,
+  .style-bar,
+  .col--sources,
+  .col__actions,
+  .bib-item__intext,
+  .bib-item__actions,
+  .app__footer {
+    display: none !important;
+  }
+
+  .columns {
+    grid-template-columns: 1fr;
+  }
+
+  .col,
+  .bib-item {
+    border: none;
+    padding: 0;
+    background: #fff;
+  }
+
+  .bib-item__entry {
+    margin-bottom: 0.6rem;
+  }
 }

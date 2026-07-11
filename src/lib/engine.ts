@@ -56,6 +56,21 @@ export function formatOne(source: Source, style: CitationStyle): FormattedCitati
   }
 }
 
+/**
+ * Format a single source knowing its 1-based position in the rendered
+ * bibliography. Position only matters for numbered styles: IEEE in-text
+ * citations are the entry's number ("[3]"), so a source's position in the
+ * sorted reference list changes its in-text form.
+ */
+export function formatOneAt(
+  source: Source,
+  style: CitationStyle,
+  position: number,
+): FormattedCitation {
+  if (style === "ieee") return formatIEEE(source, position);
+  return formatOne(source, style);
+}
+
 /** Format a single source in all three styles at once. */
 export function formatAll(source: Source): Record<CitationStyle, FormattedCitation> {
   return {

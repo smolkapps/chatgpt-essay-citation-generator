@@ -1,5 +1,5 @@
 import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import App from "../App";
 
 beforeEach(() => {
@@ -81,5 +81,66 @@ describe("App", () => {
 
     render(<App />);
     expect(screen.getByDisplayValue("Persisted Title")).toBeInTheDocument();
+  });
+
+  it("loads example sources from the empty state", () => {
+    render(<App />);
+    fireEvent.click(screen.getByRole("button", { name: /example sources/i }));
+
+    expect(screen.getAllByTestId("source-editor").length).toBeGreaterThanOrEqual(4);
+    expect(
+      screen.getByText("Carson, Rachel. Silent Spring. Houghton Mifflin, 1962."),
+    ).toBeInTheDocument();
+    // The whole-list actions appear once there is something to export.
+    expect(screen.getByRole("button", { name: /Copy all/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Download \.txt/i })).toBeInTheDocument();
+  });
+
+  it("clears all sources after confirmation", () => {
+    const confirmSpy = vi.spyOn(window, "confirm").mockReturnValue(true);
+    render(<App />);
+    fireEvent.click(screen.getByRole("button", { name: /example sources/i }));
+    fireEvent.click(screen.getByRole("button", { name: /Clear all/i }));
+
+    expect(confirmSpy).toHaveBeenCalled();
+    expect(screen.queryAllByTestId("source-editor")).toHaveLength(0);
+    expect(screen.getByText(/No sources yet/i)).toBeInTheDocument();
+    confirmSpy.mockRestore();
+  });
+
+  it("keeps sources when clearing is cancelled", () => {
+    const confirmSpy = vi.spyOn(window, "confirm").mockReturnValue(false);
+    render(<App />);
+    fireEvent.click(screen.getByRole("button", { name: /example sources/i }));
+    fireEvent.click(screen.getByRole("button", { name: /Clear all/i }));
+
+    expect(screen.getAllByTestId("source-editor").length).toBeGreaterThanOrEqual(4);
+    confirmSpy.mockRestore();
+  });
+
+  it("labels Chicago NB citations as footnotes", () => {
+    render(<App />);
+    fireEvent.click(screen.getByRole("button", { name: /example sources/i }));
+    fireEvent.click(screen.getByRole("radio", { name: /^Chicago 17th ed\. \(notes/i }));
+
+    expect(screen.getAllByText("Footnote:").length).toBeGreaterThan(0);
+    expect(
+      screen.getAllByRole("button", { name: /Copy footnote/i }).length,
+    ).toBeGreaterThan(0);
+  });
+
+  it("numbers IEEE in-text citations by sorted list position", () => {
+    render(<App />);
+    fireEvent.click(screen.getByRole("button", { name: /example sources/i }));
+    fireEvent.click(screen.getByRole("radio", { name: /IEEE/i }));
+
+    // Four example sources → in-text markers [1]..[4], not four copies of [1].
+    expect(screen.getByText("[1]")).toBeInTheDocument();
+    expect(screen.getByText("[4]")).toBeInTheDocument();
+  });
+
+  it("has a share button", () => {
+    render(<App />);
+    expect(screen.getByRole("button", { name: /Share this tool/i })).toBeInTheDocument();
   });
 });
